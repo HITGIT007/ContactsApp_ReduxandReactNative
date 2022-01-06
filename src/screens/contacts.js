@@ -2,6 +2,7 @@ import React from 'react'
 import { View, Text, StyleSheet, Dimensions, Linking } from 'react-native'
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler'
 import { connect } from 'react-redux'
+//Through this connect it is connected
 import * as Types from '../store/types'
 const { width } = Dimensions.get('screen')
 
@@ -11,15 +12,20 @@ const App = (props) => {
 
     const deleteItem = (number) => {
         const filter = props.contacts.filter(contact => contact.phoneNumbers[0].number !== number)
-        props.updateContacts(filter);
+        props.updateContacts(filter);//updating the state in Redux store
+        //and mapDispatchToProps will send teh action to reducer
     }
 
     return (
         <View style={styles.container}>
-            <Text>Contcts Screen</Text>
+            <Text>Contacts</Text>
             <Text>{props.contacts.length}</Text>
             <FlatList data={props.contacts} renderItem={({ item }) => (
-                <TouchableOpacity onLongPress={() => deleteItem(item.phoneNumbers[0].number)} onPress={() => Linking.openURL(`tel:${item.phoneNumbers[0].number}`)} style={styles.btn}>
+                <TouchableOpacity 
+                    onLongPress={() => deleteItem(item.phoneNumbers[0].number)} 
+                    onPress={() => Linking.openURL(`tel:${item.phoneNumbers[0].number}`)} 
+                    style={styles.btn}
+                >
                     <Text>{ item.phoneNumbers[0].number }</Text>
                 </TouchableOpacity>
             )}  />
@@ -36,7 +42,7 @@ const styles = StyleSheet.create({
     },
     btn: {
         padding: 10,
-        backgroundColor: '#ccc',
+        backgroundColor: '#ADD8E6',
         width: width / 1.05,
         marginVertical: 10
     }
@@ -44,7 +50,9 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => state;
 const mapDispatchToProps = dispatch => ({
-    updateContacts: contacts => dispatch({type: Types.UPDATE_CONTACTS, payload: {contacts}})
+    updateContacts: contacts => dispatch({
+        type: Types.UPDATE_CONTACTS, 
+        payload: {contacts}})
 });
 const connectComponent = connect(mapStateToProps, mapDispatchToProps);
 export default connectComponent(App);
